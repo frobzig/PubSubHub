@@ -1,0 +1,105 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="stylesheet" href="default.css" />
+
+    <title>SigSubHub</title>
+</head>
+<body>
+
+    <form id="myForm">
+        <label for="messageInput">Enter a message:</label>
+        <input type="text" id="messageInput" />
+        <input type="submit" value="Send" />
+    </form>
+
+    <div id="nameDiv">
+        <form id="myName">
+            <input type="text" id="nameInput" />
+            <input type="submit" value="Change Name" />
+            <input type="button" value="Cancel" onclick="hideChangeName();"/>
+        </form>
+
+        <a id="changeName" href="#" onclick="showChangeName()"></a>
+    </div>
+
+    <ul id="myList">
+    </ul>
+
+    <script src="Scripts/jquery-1.8.3.js"></script>
+    <script src="Scripts/jquery.cookie.js"></script>
+    <script src="Scripts/jquery.signalR-1.0.0-rc1.js"></script>
+    <script src="signalr/hubs"></script>
+
+    <script>
+        myName = '';
+
+        function updateName(name) {
+            $.cookie("siguser", name, { expires: 30 });
+
+            myName = name;
+            $('#changeName').text(myName);
+            $('#nameInput').val(myName);
+        }
+
+        var showChangeName = function (event) {
+            $('#myName').show();
+            $('#changeName').hide();
+
+            $('#nameInput').val('');
+            $('#nameInput').focus();
+
+            return false;
+        };
+
+        var hideChangeName = function (event) {
+            $('#myName').hide();
+            $('#changeName').show();
+        };
+
+        var changeName = function (event) {
+            updateName($('#nameInput').val());
+            hideChangeName();
+
+            event.preventDefault();
+        };
+
+        var sendMessage = function (event) {
+            var txt = $('#messageInput').val();
+            $('#messageInput').val('');
+            $('#messageInput').focus();
+
+            psh.server.publishMessage(true, "GLOBAL", { "txt": txt, "name": myName });
+
+            event.preventDefault();
+        };
+
+        $(document).ready(function () {
+            if ($.cookie('siguser') !== null) {
+                updateName($.cookie('siguser'));
+            }
+            else {
+                updateName('guest' + Math.floor(Math.random() * 10000));
+            }
+
+            $('#myForm').submit(sendMessage);
+            $('#myName').submit(changeName);
+            $('#myName').hide();
+        });
+
+        var psh = $.connection.pubSubHub;
+
+        psh.client.receiveMessage = function (message) {
+            var $myList = $('#myList');
+
+            $myList.append($('<li>[' + message.formattedpublisheddatetime + '] ' + message.content.name + ': ' + message.content.txt + '</li>'));
+
+            $myList.scrollTop($myList[0].scrollHeight - $myList.height());
+        };
+
+        $.connection.hub.start().done(function () {
+            psh.server.subscribe("GLOBAL");
+        });
+    </script>
+</body>
+</html>
