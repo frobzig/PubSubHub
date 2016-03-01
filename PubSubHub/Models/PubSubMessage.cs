@@ -8,7 +8,6 @@ using System.Net.Http.Headers;
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Utils;
 
 namespace PubSubHub.Models
 {
@@ -23,7 +22,7 @@ namespace PubSubHub.Models
         #region ctor
         public PubSubMessage()
         {
-            this.MessageId = TimestampGuid.NewGuid();
+            this.MessageId = TimestampGuid.Create();
         }
 
         public PubSubMessage(IPubSubMessage message)

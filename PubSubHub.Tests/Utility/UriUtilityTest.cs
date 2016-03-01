@@ -14,10 +14,10 @@ namespace PubSubHub.Tests.Utility
         {
             string[] uris = { "foo", "bar", "/foo/bar/", "abc/", "/cba", "/cba/abc", "foo/" };
             string expected = "foo/bar/foo/bar/abc/cba/cba/abc/foo";
-            Assert.AreEqual<string>(expected, UriExtensions.Combine(uris));
+            Assert.AreEqual<string>(expected, UriUtility.Combine(uris));
 
             uris[uris.Length - 1] = "foo";
-            Assert.AreEqual<string>(expected, UriExtensions.Combine(uris));
+            Assert.AreEqual<string>(expected, UriUtility.Combine(uris));
         }
     }
 }

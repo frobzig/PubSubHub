@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PubSubHub.Models;
-using Utils;
 
 namespace PubSubHub.Tests
 {
@@ -43,7 +42,7 @@ namespace PubSubHub.Tests
             return new List<ISubscriptionInfo>()
             {
                 new SubscriptionInfo(
-                    TimestampGuid.NewGuid(),
+                    TimestampGuid.Create(),
                     new Uri(MemoryMessageHubTest.Address),
                     MemoryMessageHubTest.TestTopic)
             };
@@ -99,7 +98,7 @@ namespace PubSubHub.Tests
         {
             TestMessageHub hub = new TestMessageHub();
 
-            IPubSubMessage message = hub.ExposedGetArchivedMessage(TimestampGuid.NewGuid());
+            IPubSubMessage message = hub.ExposedGetArchivedMessage(TimestampGuid.Create());
             Assert.IsNull(message);
         }
 
@@ -134,8 +133,8 @@ namespace PubSubHub.Tests
         [TestMethod]
         public void PubSubTest()
         {
-            Guid clientId1 = TimestampGuid.NewGuid();
-            Guid clientId2 = TimestampGuid.NewGuid();
+            Guid clientId1 = TimestampGuid.Create();
+            Guid clientId2 = TimestampGuid.Create();
 
             TestMessageHub hub = new TestMessageHub();
 
@@ -245,7 +244,7 @@ namespace PubSubHub.Tests
         {
             TestMessageHub hub = new TestMessageHub();
 
-            Assert.IsNull(hub.GetMessage(TimestampGuid.NewGuid()));
+            Assert.IsNull(hub.GetMessage(TimestampGuid.Create()));
 
             IPubSubMessage message = new PubSubMessage()
             {
@@ -255,7 +254,7 @@ namespace PubSubHub.Tests
 
             hub.PublishMessage(Guid.Empty, message);
 
-            Assert.IsNull(hub.GetMessage(TimestampGuid.NewGuid()));
+            Assert.IsNull(hub.GetMessage(TimestampGuid.Create()));
             Assert.AreEqual<IPubSubMessage>(message, hub.GetMessage(message.MessageId));
         }
 
@@ -266,7 +265,7 @@ namespace PubSubHub.Tests
             Guid myGuid = Guid.NewGuid();
             TestMessageHub hub = new TestMessageHub();
 
-            hub.Subscribe(myGuid, new Uri(UriExtensions.EmptyUriString), PublishMessageTestString);
+            hub.Subscribe(myGuid, new Uri(UriUtility.EmptyUriString), PublishMessageTestString);
 
             IPubSubMessage message1 = new PubSubMessage()
             {
@@ -338,7 +337,7 @@ namespace PubSubHub.Tests
             PrivateObject phub = new PrivateObject(hub);
             Dictionary<Guid, IPubSubMessage> privateMessages = (Dictionary<Guid, IPubSubMessage>)phub.GetField("_messages", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetField);
 
-            hub.Subscribe(TimestampGuid.NewGuid(), new Uri("http://tempuri.org"), original.TopicId);
+            hub.Subscribe(TimestampGuid.Create(), new Uri("http://tempuri.org"), original.TopicId);
 
             List<IPubSubMessage> messages = new List<IPubSubMessage>();
 
@@ -414,8 +413,8 @@ namespace PubSubHub.Tests
 
             SubscriptionDictionary subscriptions = (SubscriptionDictionary)po.GetField("_subscriptions");
 
-            Uri callbackUri = new Uri(UriExtensions.EmptyUriString);
-            Guid clientId = TimestampGuid.NewGuid();
+            Uri callbackUri = new Uri(UriUtility.EmptyUriString);
+            Guid clientId = TimestampGuid.Create();
             const string testTopic = "ExpireSubscriptionTestTopic";
             hub.Subscribe(clientId, callbackUri, testTopic);
 
@@ -449,7 +448,7 @@ namespace PubSubHub.Tests
             const string RefreshSubscriptionTestString = "RefreshSubscriptionTest";
             TestMessageHub hub = new TestMessageHub();
             Guid myGuid = Guid.NewGuid();
-            ISubscriptionInfo info = hub.Subscribe(myGuid, new Uri(UriExtensions.EmptyUriString), RefreshSubscriptionTestString);
+            ISubscriptionInfo info = hub.Subscribe(myGuid, new Uri(UriUtility.EmptyUriString), RefreshSubscriptionTestString);
 
 
             Assert.IsTrue(hub.RefreshSubscription(info.Id));
@@ -462,7 +461,7 @@ namespace PubSubHub.Tests
             const string UnsubscribeByIdTestString = "UnsubscribeByIdTest";
             TestMessageHub hub = new TestMessageHub();
             Guid myGuid = Guid.NewGuid();
-            ISubscriptionInfo info = hub.Subscribe(myGuid, new Uri(UriExtensions.EmptyUriString), UnsubscribeByIdTestString);
+            ISubscriptionInfo info = hub.Subscribe(myGuid, new Uri(UriUtility.EmptyUriString), UnsubscribeByIdTestString);
 
 
             Assert.IsTrue(hub.UnsubscribeById(info.Id));

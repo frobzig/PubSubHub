@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
@@ -50,12 +51,12 @@ namespace SigSubHub
             return base.OnReconnected();
         }
 
-        public override System.Threading.Tasks.Task OnDisconnected()
+        public override Task OnDisconnected(bool stopCalled)
         {
             GuidLink.Remove(this.Context.ConnectionId);
             this.Unsubscribe(null);
-            
-            return base.OnDisconnected();
+
+            return base.OnDisconnected(stopCalled);
         }
         
         public void PublishMessage(bool sendBack, string topic, dynamic content)

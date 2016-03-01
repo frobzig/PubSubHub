@@ -22,7 +22,7 @@ namespace PubSubHub.Tests
         [TestMethod]
         public void Constructor2Test()
         {
-            Guid clientId = TimestampGuid.NewGuid();
+            Guid clientId = TimestampGuid.Create();
             Uri uri = new Uri("http://tempuri.org/1");
             string topicId = "TestTopic";
 
@@ -44,9 +44,9 @@ namespace PubSubHub.Tests
             int failureCount = 1;
             string topicId = "TestTopic";
             DateTime lastRefresh = DateTime.UtcNow;
-            Guid clientId = TimestampGuid.NewGuid();
+            Guid clientId = TimestampGuid.Create();
             Uri uri = new Uri("http://tempuri.org/1");
-            Guid id = TimestampGuid.NewGuid();
+            Guid id = TimestampGuid.Create();
 
             Assert.AreEqual<int>(0, cbInfo.FailureCount);
             Assert.AreEqual<string>(null, cbInfo.Topic);

@@ -22,7 +22,7 @@ namespace PubSubHub.Tests
         [TestMethod]
         public void FindTest()
         {
-            Guid clientId = TimestampGuid.NewGuid();
+            Guid clientId = TimestampGuid.Create();
 
             string topicId = "Testing";
 
@@ -60,7 +60,7 @@ namespace PubSubHub.Tests
         [TestMethod]
         public void ContainsTest()
         {
-            Guid clientId = TimestampGuid.NewGuid();
+            Guid clientId = TimestampGuid.Create();
 
             string topicId = "Testing";
 
@@ -88,7 +88,7 @@ namespace PubSubHub.Tests
         [TestMethod]
         public void RemoveTest()
         {
-            Guid clientId = TimestampGuid.NewGuid();
+            Guid clientId = TimestampGuid.Create();
 
             string topicId = "Testing";
 

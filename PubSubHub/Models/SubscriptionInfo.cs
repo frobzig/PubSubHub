@@ -7,7 +7,6 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
-using Utils;
 
 namespace PubSubHub.Models
 {
@@ -18,7 +17,7 @@ namespace PubSubHub.Models
         #region ctor
         public SubscriptionInfo()
         {
-            this.Id = TimestampGuid.NewGuid();
+            this.Id = TimestampGuid.Create();
 
             this.LastRefresh = DateTime.UtcNow;
         }
@@ -46,7 +45,7 @@ namespace PubSubHub.Models
 
         [Required(AllowEmptyStrings = true)]
         [DataMember(EmitDefaultValue = false, Name = "callback", IsRequired = true)]
-        [JsonProperty(PropertyName = "callback", Required = Required.Always, DefaultValueHandling=DefaultValueHandling.Ignore, NullValueHandling=NullValueHandling.Ignore)]
+        [JsonProperty(PropertyName = "callback", Required = Required.Always, DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore)]
         public string MappedUri
         {
             get
@@ -84,11 +83,11 @@ namespace PubSubHub.Models
         public string Topic { get; set; }
 
         [DataMember(EmitDefaultValue = false, Name = "group")]
-        [JsonProperty(PropertyName = "group", DefaultValueHandling=DefaultValueHandling.Ignore, NullValueHandling=NullValueHandling.Ignore)]
+        [JsonProperty(PropertyName = "group", DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore)]
         public string Group { get; set; }
 
         [DataMember(EmitDefaultValue = false, Name = "level")]
-        [JsonProperty(PropertyName = "level", DefaultValueHandling=DefaultValueHandling.Ignore, NullValueHandling=NullValueHandling.Ignore)]
+        [JsonProperty(PropertyName = "level", DefaultValueHandling = DefaultValueHandling.Ignore, NullValueHandling = NullValueHandling.Ignore)]
         public int Level { get; set; }
 
         [DataMember(EmitDefaultValue = false, Name = "failcount")]

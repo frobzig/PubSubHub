@@ -1,17 +1,19 @@
-﻿using System.Web;
+﻿using Microsoft.AspNet.SignalR;
+using Microsoft.Owin;
+using Owin;
+using System.Web;
 using System.Web.Routing;
-using Microsoft.AspNet.SignalR;
 
-[assembly: WebActivator.PreApplicationStartMethod(typeof(SigSubHub.RegisterHubs), "Start")]
+[assembly: OwinStartup(typeof(SigSubHub.Startup))]
 
 namespace SigSubHub
 {
-    public static class RegisterHubs
+    public class Startup
     {
-        public static void Start()
+        public void Configuration(IAppBuilder app)
         {
-            // Register the default hubs route: ~/signalr/hubs
-            RouteTable.Routes.MapHubs();
+            // Any connection or hub wire up and configuration should go here
+            app.MapSignalR();
         }
     }
 }
