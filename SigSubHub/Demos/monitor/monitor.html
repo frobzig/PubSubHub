@@ -75,7 +75,7 @@
         };
 
         $(document).ready(function () {
-            if ($.cookie('siguser') !== null) {
+            if (!!$.cookie('siguser')) {
                 updateName($.cookie('siguser'));
             }
             else {

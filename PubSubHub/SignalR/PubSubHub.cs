@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Microsoft.AspNet.SignalR;
+using Microsoft.AspNet.SignalR.Hubs;
+using PubSubHub.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-using Microsoft.AspNet.SignalR;
-using Microsoft.AspNet.SignalR.Hubs;
-using PubSubHub.Models;
 
-namespace SigSubHub
+namespace PubSubHub.SignalR
 {
     public static class GuidLink
     {

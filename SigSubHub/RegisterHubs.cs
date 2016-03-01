@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.SignalR;
 using Microsoft.Owin;
 using Owin;
+using System;
 using System.Web;
 using System.Web.Routing;
 
@@ -12,7 +13,7 @@ namespace SigSubHub
     {
         public void Configuration(IAppBuilder app)
         {
-            // Any connection or hub wire up and configuration should go here
+            AppDomain.CurrentDomain.Load(typeof(PubSubHub.SignalR.SigMessageHub).Assembly.FullName);
             app.MapSignalR();
         }
     }

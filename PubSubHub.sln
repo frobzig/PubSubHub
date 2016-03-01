@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PubSubHub", "PubSubHub\PubSubHub.csproj", "{37F0A2AC-910F-4098-92CA-73264C2FF0CF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PubSubHub.Tests", "PubSubHub.Tests\PubSubHub.Tests.csproj", "{3B01A4DC-81DE-48E0-A826-D4760F01DF5D}"
