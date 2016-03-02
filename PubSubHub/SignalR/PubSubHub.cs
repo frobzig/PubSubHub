@@ -9,23 +9,37 @@ using System.Web;
 
 namespace PubSubHub.SignalR
 {
-    public static class GuidLink
+    /// <summary>
+    /// This class links a SignalR ConnectionId to a PubSubHub clientId
+    /// </summary>
+    internal static class GuidLink
     {
-        private static readonly Dictionary<string, Guid> _link = new Dictionary<string, Guid>();
+        internal class LinkInfo
+        {
+            public LinkInfo(string hubId = null)
+            {
+                this.HubId = hubId;
+            }
 
-        public static Guid GetGuid(string id)
+            public Guid ClientId { get; set; } = Guid.NewGuid();
+            public string HubId { get; set; }
+        }
+
+        private static readonly Dictionary<string, LinkInfo> _link = new Dictionary<string, LinkInfo>();
+
+        internal static LinkInfo GetInfo(string connectionId)
         {
             lock (_link)
             {
-                Guid guid;
+                LinkInfo info;
 
-                if (!_link.TryGetValue(id, out guid))
+                if (!_link.TryGetValue(connectionId, out info))
                 {
-                    guid = Guid.NewGuid();
-                    _link.Add(id, guid);
+                    info = new LinkInfo();
+                    _link.Add(connectionId, info);
                 }
 
-                return guid;
+                return info;
             }
         }
 
@@ -41,6 +55,27 @@ namespace PubSubHub.SignalR
     [HubName("pubSubHub")]
     public class PubSubHub : Hub
     {
+        private static SigMessageHub _messageHub;
+
+        private static Func<string, SigMessageHub> _getMessageHub;
+        public static Func<string, SigMessageHub> GetMessageHub
+        {
+            get
+            {
+                if (_getMessageHub == null)
+                {
+                    _messageHub = new SigMessageHub();
+                    _getMessageHub = (_) => _messageHub;
+                }
+
+                return _getMessageHub;
+            }
+            set
+            {
+                _getMessageHub = value;
+            }
+        }
+
         public override System.Threading.Tasks.Task OnConnected()
         {
             return base.OnConnected();
@@ -53,32 +88,42 @@ namespace PubSubHub.SignalR
 
         public override Task OnDisconnected(bool stopCalled)
         {
-            GuidLink.Remove(this.Context.ConnectionId);
-            this.Unsubscribe(null);
+            string connectionId = this.Context.ConnectionId;
+
+            GuidLink.LinkInfo info = GuidLink.GetInfo(connectionId);
+            this.Unsubscribe(null, null, info.HubId);
+            GuidLink.Remove(connectionId);
 
             return base.OnDisconnected(stopCalled);
         }
-        
-        public void PublishMessage(bool sendBack, string topic, dynamic content)
+
+        public void PublishMessage(bool sendBack, string topic, string group, dynamic content, string hubId)
         {
             PubSubMessage message = new PubSubMessage();
 
             message.Content = content;
             message.TopicId = topic;
+            message.GroupId = group;
 
-            SigMessageHub.Instance.PublishMessage(
-                sendBack ? Guid.Empty : GuidLink.GetGuid(this.Context.ConnectionId),
+            GetMessageHub(hubId).PublishMessage(
+                sendBack ? Guid.Empty : GuidLink.GetInfo(this.Context.ConnectionId).ClientId,
                 message);
         }
 
-        public void Subscribe(string topic)
+        public void Subscribe(string topic, string group, string hubId)
         {
-            SigMessageHub.Instance.Subscribe(GuidLink.GetGuid(this.Context.ConnectionId), new Uri("signal://" + this.Context.ConnectionId), topic);
+            GetMessageHub(hubId).Subscribe(
+                GuidLink.GetInfo(this.Context.ConnectionId).ClientId,
+                new Uri("signal://" + this.Context.ConnectionId),
+                topic, group);
         }
 
-        public void Unsubscribe(string topic)
+        public void Unsubscribe(string topic, string group, string hubId)
         {
-            SigMessageHub.Instance.Unsubscribe(GuidLink.GetGuid(this.Context.ConnectionId), topicId: topic);
+            GetMessageHub(hubId).Unsubscribe(
+                GuidLink.GetInfo(this.Context.ConnectionId).ClientId,
+                topicId: topic,
+                groupId: group);
         }
     }
 }

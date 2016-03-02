@@ -11,16 +11,6 @@ namespace PubSubHub.SignalR
 {
     public class SigMessageHub : MemoryMessageHub
     {
-        private static readonly SigMessageHub _instance = new SigMessageHub();
-
-        public static SigMessageHub Instance
-        {
-            get
-            {
-                return _instance;
-            }
-        }
-
         public SigMessageHub()
         {
             this.MessagePublished += SigMessageHub_MessagePublished;

@@ -9,5 +9,6 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <copyright>Copyright © 2016 Nicholas Barrett</copyright>
+    <licenseUrl>http://opensource.org/licenses/mit-license.php</licenseUrl>
   </metadata>
 </package>
