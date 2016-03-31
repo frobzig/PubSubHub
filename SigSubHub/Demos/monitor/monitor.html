@@ -97,7 +97,7 @@
             $myList.scrollTop($myList[0].scrollHeight - $myList.height());
         };
 
-        $.connection.hub.start().done(function () {
+        $.connection.hub.start({ transport: 'longPolling' }, function () {
             psh.server.subscribe("GLOBAL", null, null);
         });
     </script>

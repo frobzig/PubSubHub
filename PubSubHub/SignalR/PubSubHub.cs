@@ -125,5 +125,10 @@ namespace PubSubHub.SignalR
                 topicId: topic,
                 groupId: group);
         }
+
+        public void SetClientId(string guid)
+        {
+            GuidLink.GetInfo(this.Context.ConnectionId).ClientId = Guid.Parse(guid);
+        }
     }
 }
